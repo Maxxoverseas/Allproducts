@@ -15,18 +15,48 @@ const ProductSearchApp = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [directQuantity, setDirectQuantity] = useState("");
   const [showAllProducts, setShowAllProducts] = useState(false);
-  const [productsToShow, setProductsToShow] = useState(50); // Initial products to display
+  const [productsToShow, setProductsToShow] = useState(50);
+  const [searchField, setSearchField] = useState("all");
+
+  // Utility function to normalize text (remove extra spaces, trim, lowercase)
+  const normalizeText = (text) => {
+    if (!text) return "";
+    // Convert to lowercase, trim, and replace multiple spaces with single space
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, " ") // Replace multiple spaces with single space
+      .replace(/\s+/g, ""); // Remove ALL spaces for flexible matching
+  };
 
   // Clean products data with original count
   const cleanedProducts = useMemo(() => {
-    return products.map((product) => ({
-      id: product.id || Math.random().toString(36).substr(2, 9),
-      BRAND_NAME: product.BRAND_NAME || "Unknown Product",
-      COMPOSITION: product.COMPOSITION || "No Composition Info",
-      packing: product.packing || "No Packaging Info",
-      price: product.price || 0,
-      count: product.count || 1,
-    }));
+    return products.map((product) => {
+      // Normalize product data for better search matching
+      const normalizedBrand = normalizeText(product.BRAND_NAME || "");
+      const normalizedComposition = normalizeText(product.COMPOSITION || "");
+      const normalizedPacking = normalizeText(product.packing || "");
+      const normalizedId = normalizeText(product.id || "");
+
+      return {
+        id: product.id || Math.random().toString(36).substr(2, 9),
+        BRAND_NAME: product.BRAND_NAME || "Unknown Product",
+        COMPOSITION: product.COMPOSITION || "No Composition Info",
+        packing: product.packing || "No Packaging Info",
+        price: product.price || 0,
+        count: product.count || 1,
+        // Add normalized versions for search
+        normalized: {
+          brand: normalizedBrand,
+          composition: normalizedComposition,
+          packing: normalizedPacking,
+          id: normalizedId,
+          // Combined normalized text for "all" search
+          all: `${normalizedBrand} ${normalizedComposition} ${normalizedPacking} ${normalizedId}`,
+        },
+      };
+    });
   }, []);
 
   // Real-time Currency API with multiple fallbacks
@@ -231,34 +261,51 @@ const ProductSearchApp = () => {
     return () => clearInterval(interval);
   }, [fetchCurrencyRates]);
 
-  // Filter products by BRAND_NAME only
+  // Enhanced search functionality that handles spaces flexibly
   const filteredProducts = useMemo(() => {
-    if (!searchTerm.trim()) {
-      if (showAllProducts) {
-        // Return sorted all products
-        return [...cleanedProducts].sort((a, b) => {
-          switch (sortBy) {
-            case "name":
-              return (a.BRAND_NAME || "").localeCompare(b.BRAND_NAME || "");
-            case "price-low":
-              return (a.price || 0) - (b.price || 0);
-            case "price-high":
-              return (b.price || 0) - (a.price || 0);
-            default:
-              return 0;
-          }
-        });
-      }
+    if (!searchTerm.trim() && !showAllProducts) {
       return [];
     }
 
-    let filtered = cleanedProducts.filter((product) => {
-      const productBrandName = product.BRAND_NAME || "";
-      const searchText = searchTerm.trim().toLowerCase();
+    let filtered = [];
 
-      return productBrandName.toLowerCase().includes(searchText);
-    });
+    if (!searchTerm.trim() && showAllProducts) {
+      // Show all products when showAllProducts is true and no search term
+      filtered = cleanedProducts;
+    } else if (searchTerm.trim()) {
+      // Normalize search term (remove all spaces for flexible matching)
+      const normalizedSearchTerm = normalizeText(searchTerm);
 
+      // If search term is empty after normalization, return empty
+      if (!normalizedSearchTerm) {
+        return [];
+      }
+
+      filtered = cleanedProducts.filter((product) => {
+        switch (searchField) {
+          case "id":
+            // Search in ID field
+            return product.normalized.id.includes(normalizedSearchTerm);
+
+          case "brand":
+            // Search in brand field
+            return product.normalized.brand.includes(normalizedSearchTerm);
+
+          case "composition":
+            // Search in composition field
+            return product.normalized.composition.includes(
+              normalizedSearchTerm
+            );
+
+          case "all":
+          default:
+            // Search across all fields (combined normalized text)
+            return product.normalized.all.includes(normalizedSearchTerm);
+        }
+      });
+    }
+
+    // Apply sorting
     filtered = [...filtered].sort((a, b) => {
       switch (sortBy) {
         case "name":
@@ -273,7 +320,7 @@ const ProductSearchApp = () => {
     });
 
     return filtered;
-  }, [searchTerm, sortBy, cleanedProducts, showAllProducts]);
+  }, [searchTerm, sortBy, cleanedProducts, showAllProducts, searchField]);
 
   // Calculate totals with real-time currency conversion
   const calculateTotals = useCallback(() => {
@@ -481,6 +528,7 @@ const ProductSearchApp = () => {
     setSearchTerm("");
     setShowAllProducts(false);
     setProductsToShow(50);
+    setSearchField("all"); // Reset to all fields
   };
 
   // Get products to display (for pagination)
@@ -491,13 +539,21 @@ const ProductSearchApp = () => {
   // Get total products count
   const totalProducts = cleanedProducts.length;
 
+  // Search field options
+  const searchFieldOptions = [
+    { value: "all", label: "All Fields" },
+    { value: "id", label: "Product ID" },
+    { value: "brand", label: "Brand Name" },
+    { value: "composition", label: "Composition" },
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-6">
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
-            💊 Pharma Search
+            💊Maxx Pharma Search
           </h1>
           <p className="text-md text-gray-700">
             Search from {totalProducts}+ pharmaceutical products
@@ -540,22 +596,51 @@ const ProductSearchApp = () => {
           <div className="xl:col-span-3 space-y-6">
             {/* Search Card */}
             <div className="bg-white rounded-xl shadow-lg p-4 border border-gray-200">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                {/* Search Field Selector */}
+                <div>
+                  <label className="block text-sm font-semibold text-blue-700 mb-2">
+                    🔍 Search In
+                  </label>
+                  <select
+                    value={searchField}
+                    onChange={(e) => setSearchField(e.target.value)}
+                    className="w-full p-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-500 bg-white text-blue-800 text-sm"
+                  >
+                    {searchFieldOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
                 {/* Search Bar */}
                 <div className="lg:col-span-2">
                   <label className="block text-sm font-semibold text-purple-700 mb-2">
-                    🔍 Search Products
+                    {searchField === "all" && "Search All Fields"}
+                    {searchField === "id" && "Search by Product ID"}
+                    {searchField === "brand" && "Search by Brand Name"}
+                    {searchField === "composition" && "Search by Composition"}
                   </label>
                   <div className="relative">
                     <input
                       type="text"
-                      placeholder="Type BRAND NAME to search..."
+                      placeholder={
+                        searchField === "all"
+                          ? "Search in ID, Brand, Composition, Packing..."
+                          : searchField === "id"
+                          ? "Enter Product ID..."
+                          : searchField === "brand"
+                          ? "Enter Brand Name..."
+                          : "Enter Composition..."
+                      }
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 border border-purple-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-purple-500 transition-all duration-300 bg-white"
                     />
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span className="text-purple-500">💊</span>
+                      <span className="text-purple-500">🔍</span>
                     </div>
                     {searchTerm && (
                       <button
@@ -565,6 +650,9 @@ const ProductSearchApp = () => {
                         ✕
                       </button>
                     )}
+                  </div>
+                  <div className="text-xs text-gray-600 mt-1">
+                    💡 Search works regardless of spaces in data or search term
                   </div>
                 </div>
 
@@ -585,6 +673,29 @@ const ProductSearchApp = () => {
                 </div>
               </div>
 
+              {/* Search Tips */}
+              <div className="mt-4 text-xs text-gray-600 bg-gray-50 p-2 rounded-lg">
+                <p className="font-semibold mb-1">Search Tips:</p>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-1">
+                  <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                    All fields: "AmericanRemedies"
+                  </span>
+                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
+                    By ID: "ABC123"
+                  </span>
+                  <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded">
+                    By Brand: "Paracetamol"
+                  </span>
+                  <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded">
+                    Spaces don't matter
+                  </span>
+                </div>
+                <div className="mt-1 text-xs text-green-600">
+                  🔍 Works with: "American Remedies" or "AmericanRemedies" or
+                  "American Remedies"
+                </div>
+              </div>
+
               {/* Show All Products Toggle */}
               <div className="mt-4 flex justify-between items-center">
                 <div className="text-sm text-gray-600">
@@ -594,6 +705,15 @@ const ProductSearchApp = () => {
                       {filteredProducts.length > 0 && (
                         <span className="ml-2 text-green-600 font-semibold">
                           ({filteredProducts.length} matches)
+                        </span>
+                      )}
+                    </>
+                  ) : showAllProducts ? (
+                    <>
+                      Showing all {totalProducts} products
+                      {filteredProducts.length > 0 && (
+                        <span className="ml-2 text-green-600 font-semibold">
+                          ({filteredProducts.length} displayed)
                         </span>
                       )}
                     </>
@@ -623,6 +743,15 @@ const ProductSearchApp = () => {
                       <>
                         Results for:{" "}
                         <span className="text-purple-600">"{searchTerm}"</span>
+                        <span className="ml-2 text-sm font-normal text-gray-600">
+                          (in{" "}
+                          {
+                            searchFieldOptions.find(
+                              (opt) => opt.value === searchField
+                            )?.label
+                          }
+                          )
+                        </span>
                       </>
                     ) : (
                       "All Products"
@@ -637,6 +766,9 @@ const ProductSearchApp = () => {
                   <div className="text-center py-8">
                     <div className="text-4xl text-gray-300 mb-2">🔍</div>
                     <p className="text-gray-600">No products found</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Try searching with or without spaces
+                    </p>
                     <button
                       onClick={handleClearSearch}
                       className="mt-3 text-purple-600 hover:text-purple-800 font-medium"
@@ -672,22 +804,73 @@ const ProductSearchApp = () => {
                               {product.BRAND_NAME}
                             </h3>
 
+                            {/* Product ID with highlight if searching by ID */}
+                            <div className="mb-1">
+                              <p className="text-xs text-blue-600 font-medium">
+                                ID:
+                              </p>
+                              <p
+                                className="text-xs text-gray-700 truncate font-mono"
+                                style={{
+                                  backgroundColor:
+                                    searchField === "id" &&
+                                    product.normalized.id.includes(
+                                      normalizeText(searchTerm)
+                                    )
+                                      ? "#e3f2fd"
+                                      : "transparent",
+                                  padding:
+                                    searchField === "id" &&
+                                    product.normalized.id.includes(
+                                      normalizeText(searchTerm)
+                                    )
+                                      ? "2px 4px"
+                                      : "0",
+                                  borderRadius:
+                                    searchField === "id" &&
+                                    product.normalized.id.includes(
+                                      normalizeText(searchTerm)
+                                    )
+                                      ? "4px"
+                                      : "0",
+                                }}
+                              >
+                                {product.id}
+                              </p>
+                            </div>
+
                             {/* Compact Product Details */}
                             <div className="space-y-1 mb-3">
-                              <div>
-                                <p className="text-xs text-blue-600 font-medium">
-                                  ID:
-                                </p>
-                                <p className="text-xs text-gray-700 truncate">
-                                  {product.id}
-                                </p>
-                              </div>
-
                               <div>
                                 <p className="text-xs text-green-600 font-medium">
                                   COMPOSITION:
                                 </p>
-                                <p className="text-xs text-gray-700 line-clamp-2">
+                                <p
+                                  className="text-xs text-gray-700 line-clamp-2"
+                                  style={{
+                                    backgroundColor:
+                                      searchField === "composition" &&
+                                      product.normalized.composition.includes(
+                                        normalizeText(searchTerm)
+                                      )
+                                        ? "#e8f5e9"
+                                        : "transparent",
+                                    padding:
+                                      searchField === "composition" &&
+                                      product.normalized.composition.includes(
+                                        normalizeText(searchTerm)
+                                      )
+                                        ? "2px 4px"
+                                        : "0",
+                                    borderRadius:
+                                      searchField === "composition" &&
+                                      product.normalized.composition.includes(
+                                        normalizeText(searchTerm)
+                                      )
+                                        ? "4px"
+                                        : "0",
+                                  }}
+                                >
                                   {product.COMPOSITION}
                                 </p>
                               </div>
@@ -810,7 +993,7 @@ const ProductSearchApp = () => {
                   Start typing in the search bar to find products from{" "}
                   {totalProducts}+ items.
                 </p>
-                <div className="flex justify-center gap-4">
+                <div className="flex flex-col md:flex-row justify-center gap-4">
                   <button
                     onClick={toggleShowAllProducts}
                     className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-semibold"
@@ -818,11 +1001,27 @@ const ProductSearchApp = () => {
                     Browse All Products
                   </button>
                   <button
-                    onClick={() => setSearchTerm("Tab")}
+                    onClick={() => {
+                      setSearchTerm("American Remedies");
+                      setSearchField("brand");
+                    }}
                     className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 font-semibold"
                   >
-                    Show Tablets
+                    Search "American Remedies"
                   </button>
+                  <button
+                    onClick={() => {
+                      setSearchTerm("Paracetamol");
+                      setSearchField("composition");
+                    }}
+                    className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 font-semibold"
+                  >
+                    Search "Paracetamol"
+                  </button>
+                </div>
+                <div className="mt-4 text-xs text-gray-500">
+                  💡 Tip: Search works regardless of spaces in product data or
+                  search term
                 </div>
               </div>
             )}
@@ -1117,13 +1316,22 @@ const ProductSearchApp = () => {
                 </div>
               </div>
 
-              {/* Remove Button Only */}
-              <div className="mt-4">
+              {/* Action Buttons */}
+              <div className="mt-4 flex gap-2">
+                <button
+                  onClick={() => {
+                    addToCartWithQuantity(selectedProduct, 1);
+                    closeProductDetails();
+                  }}
+                  className="flex-1 bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition-colors font-semibold"
+                >
+                  Add to Cart
+                </button>
                 <button
                   onClick={closeProductDetails}
-                  className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition-colors font-semibold"
+                  className="flex-1 bg-red-500 text-white py-2 rounded hover:bg-red-600 transition-colors font-semibold"
                 >
-                  Remove
+                  Close
                 </button>
               </div>
             </div>
