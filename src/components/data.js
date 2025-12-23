@@ -52982,7 +52982,7 @@ export const products = [
     BRAND_NAME: "BOLDEBOLIN (BOLDY)",
     COMPOSITION: "Boldenone Undecylenate 250MG",
     packing: "10ML",
-    price: 1450,
+    price: 1510,
   },
   {
     count: 6590,
@@ -52990,7 +52990,7 @@ export const products = [
     BRAND_NAME: "NANDROBOLIN (DECA) 250MG",
     COMPOSITION: "Nandrolone Decanoate",
     packing: "10ML",
-    price: 1450,
+    price: 1510,
   },
   {
     count: 6591,
@@ -52998,7 +52998,7 @@ export const products = [
     BRAND_NAME: "TESTOBOLIN (TEST ENAN) 250MG",
     COMPOSITION: "Testosterone Enanthate",
     packing: "10ML",
-    price: 1300,
+    price: 1360,
   },
   {
     count: 6592,
@@ -53006,7 +53006,7 @@ export const products = [
     BRAND_NAME: "TEST CYPO",
     COMPOSITION: "Testosterone Cypionate 250MG",
     packing: "10ML",
-    price: 1300,
+    price: 1360,
   },
   {
     count: 6593,
@@ -53014,7 +53014,7 @@ export const products = [
     BRAND_NAME: "TESTO RAPID (TEST PROP)",
     COMPOSITION: "Testosterone Propionate 100MG",
     packing: "10ML",
-    price: 1075,
+    price: 1135,
   },
   {
     count: 6594,
@@ -53022,7 +53022,7 @@ export const products = [
     BRAND_NAME: "INDUJECT (SUSTA)",
     COMPOSITION: "Testosterone Blend 250MG",
     packing: "10ML",
-    price: 1300,
+    price: 1360,
   },
   {
     count: 6595,
@@ -53030,7 +53030,7 @@ export const products = [
     BRAND_NAME: "TRENARAPID (TREN ACETATE)",
     COMPOSITION: "Trenbolone Acetate 100MG",
     packing: "10ML",
-    price: 2650,
+    price: 2710,
   },
   {
     count: 6596,
@@ -53038,7 +53038,7 @@ export const products = [
     BRAND_NAME: "PARABOLIN (TREN HEXA)",
     COMPOSITION: "Trenbolone Hexahydrobenzylcarbonate 75MG",
     packing: "10ML",
-    price: 3000,
+    price: 3060,
   },
   {
     count: 6597,
@@ -53046,7 +53046,7 @@ export const products = [
     BRAND_NAME: "MASTEBOLIN (MASTERON)",
     COMPOSITION: "Drostanolone Propionate 100MG",
     packing: "10ML",
-    price: 1850,
+    price: 1910,
   },
   {
     count: 6598,
@@ -53054,7 +53054,7 @@ export const products = [
     BRAND_NAME: "ALPHABOLIN (PRIMO)",
     COMPOSITION: "Methenolone Enanthate 100MG",
     packing: "10ML",
-    price: 2925,
+    price: 2985,
   },
   {
     count: 6599,
@@ -53062,7 +53062,7 @@ export const products = [
     BRAND_NAME: "NANDRORAPID (NPP)",
     COMPOSITION: "Nandrolone Phenylpropionate 100MG",
     packing: "10ML",
-    price: 1650,
+    price: 1710,
   },
   {
     count: 6600,
@@ -53070,7 +53070,7 @@ export const products = [
     BRAND_NAME: "REXOGIN (WINNY)",
     COMPOSITION: "Stanozolol 50MG ",
     packing: "10ML",
-    price: 1450,
+    price: 1510,
   },
   {
     count: 6601,
@@ -53078,7 +53078,7 @@ export const products = [
     BRAND_NAME: "TESTOBASE (TEST SUSPENSION)",
     COMPOSITION: "Testosterone Suspension 100MG",
     packing: "10ML",
-    price: 1650,
+    price: 1710,
   },
   {
     count: 6602,
@@ -53086,7 +53086,7 @@ export const products = [
     BRAND_NAME: "TREN ENAN",
     COMPOSITION: "Trenbolone Enanthate 250MG",
     packing: "10ML",
-    price: 4250,
+    price: 4310,
   },
   {
     count: 6603,
@@ -53094,7 +53094,7 @@ export const products = [
     BRAND_NAME: "TESTO EXTEND",
     COMPOSITION: "Testosterone Blend 250MG",
     packing: "4ML",
-    price: 750,
+    price: 810,
   },
   {
     count: 6604,
@@ -53102,7 +53102,7 @@ export const products = [
     BRAND_NAME: "ASTRALEAN (CLEN)",
     COMPOSITION: "Clenbuterol Hydrochloride 40MCG",
     packing: "100TABS",
-    price: 800,
+    price: 860,
   },
   {
     count: 6605,
@@ -53110,7 +53110,7 @@ export const products = [
     BRAND_NAME: "ASTRALEAN (CLEN)",
     COMPOSITION: "Clenbuterol Hydrochloride 40MCG",
     packing: "50TABS",
-    price: 425,
+    price: 485,
   },
   {
     count: 6606,
@@ -53118,7 +53118,7 @@ export const products = [
     BRAND_NAME: "THYRO3 (T3)",
     COMPOSITION: "Liothyronine Sodium 25MCG",
     packing: "30TABS",
-    price: 310,
+    price: 360,
   },
   {
     count: 6607,
@@ -53126,7 +53126,7 @@ export const products = [
     BRAND_NAME: "OXANABOL (OXY)",
     COMPOSITION: "Oxymetholone 10MG",
     packing: "50TABS",
-    price: 1925,
+    price: 1985,
   },
   {
     count: 6608,
@@ -53134,7 +53134,7 @@ export const products = [
     BRAND_NAME: "OXYDROLONE (ANAVAR)",
     COMPOSITION: "Oxandrolone 50MG",
     packing: "50TABS",
-    price: 1925,
+    price: 1985,
   },
   {
     count: 6609,
@@ -53142,7 +53142,7 @@ export const products = [
     BRAND_NAME: "ALPHABOL (DANA)",
     COMPOSITION: "Methandienone 10MG",
     packing: "100TABS",
-    price: 1025,
+    price: 1085,
   },
   {
     count: 6610,
@@ -53150,7 +53150,7 @@ export const products = [
     BRAND_NAME: "REXOBOL (STANA TAB)",
     COMPOSITION: "Stanozolol 10MG",
     packing: "100TABS",
-    price: 1025,
+    price: 1085,
   },
   {
     count: 6611,
@@ -53158,7 +53158,7 @@ export const products = [
     BRAND_NAME: "REXOBOL (STANA TAB)",
     COMPOSITION: "Stanozolol 50MG",
     packing: "50TABS",
-    price: 2200,
+    price: 2260,
   },
   {
     count: 6612,
@@ -53166,7 +53166,7 @@ export const products = [
     BRAND_NAME: "PROVIBOL (PROVIRON)",
     COMPOSITION: "Mesterolone 25MG",
     packing: "50TABS",
-    price: 1050,
+    price: 1110,
   },
   {
     count: 6613,
@@ -53174,7 +53174,7 @@ export const products = [
     BRAND_NAME: "ANAZOLE (ANASTROZOLE)",
     COMPOSITION: "Anastrozole 1MG",
     packing: "30TABS",
-    price: 1100,
+    price: 1160,
   },
   {
     count: 6614,
@@ -53182,7 +53182,7 @@ export const products = [
     BRAND_NAME: "TESTOTABS",
     COMPOSITION: "Testosterone Undecanoate 40MG",
     packing: "50TABS",
-    price: 700,
+    price: 760,
   },
   {
     count: 6615,
