@@ -6903,14 +6903,9 @@ export const products = [
     packing: "10 x 40 Capsules, BOX PACKING",
     price: 975,
   },
-  {
-    count: 841,
-    id: "Healing Pharma Nervismart 450",
-    BRAND_NAME: "Nervismart 450",
-    COMPOSITION: "Pregabalin 450Mg",
-    packing: "10 x 15 Capsules, BOX PACKING",
-    price: 79,
-  },
+
+  //   count: 841,
+
   {
     count: 842,
     id: "Healing Pharma Paxobrook Combikit",
@@ -7250,18 +7245,6 @@ export const products = [
     price: null,
   },
 
-  //   {
-  //     count: 883,
-  //     id: "6000product Varenismart 1",
-  //     BRAND_NAME: "Varenismart 1",
-  //     COMPOSITION: "Vareniciline Tartrate 1Mg Tablet",
-  //     packing: "10 , per Strip / weight ",
-  //     price: 375,
-  //   },
-
-  // every id me 6000product add karo and  every packing  me per Strip / weight add karo
-
-  // count884 se end thk  complete data create karo
   {
     count: 884,
     id: "6000product RENERVE PLUS CAP",
@@ -57931,14 +57914,7 @@ export const products = [
     packing: "1X3",
     price: 13.1985,
   },
-  {
-    count: 7208,
-    id: "Maxx.in , HEALING PHARMA",
-    BRAND_NAME: "NERVISMART 450",
-    COMPOSITION: "NERVISMART 450",
-    packing: "1X15",
-    price: 93.4543,
-  },
+
   {
     count: 7209,
     id: "Maxx.in",
