@@ -57042,14 +57042,7 @@ export const products = [
     packing: "1X10",
     price: 23.8877,
   },
-  {
-    count: 7099,
-    id: "Maxx.in",
-    BRAND_NAME: "Iverguard-12",
-    COMPOSITION: "Iverguard-12",
-    packing: "1X10",
-    price: 0.0,
-  },
+
   {
     count: 7100,
     id: "Maxx.in , Healing Pharma",
